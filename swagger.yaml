@@ -2,8 +2,7 @@ openapi: 3.0.3
 info:
   title: QNO Queue Management API
   description: |
-    Enterprise API for QNO Queue Management Platform.
-    Powered by Supabase Edge Functions.
+     API for QNO Queue Management Platform.
   version: 1.0.0
 servers:
 - url: https://virtserver.swaggerhub.com/flaredots/Qno/1.0.0
