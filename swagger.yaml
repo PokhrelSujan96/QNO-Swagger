@@ -1,349 +1,331 @@
 openapi: 3.0.3
 info:
   title: QNO Queue Management API
-  description: |
-     API for QNO Queue Management Platform.
   version: 1.0.0
+
 servers:
-- url: https://virtserver.swaggerhub.com/flaredots/Qno/1.0.0
-  description: SwaggerHub API Auto Mocking
-- url: https://mtpeozrimqegooogvsgi.supabase.co/functions/v1
+  - url: https://mtpeozrimqegooogvsgi.supabase.co/functions/v1
+
 tags:
-- name: Auth
-- name: Superadmin
-- name: Admin
-- name: Public
+  - name: Auth
+  - name: Superadmin
+  - name: Admin
+  - name: Public
+
 paths:
+
   /superadmin-register:
     post:
-      tags:
-      - Auth
+      tags: [Auth]
       summary: Register Superadmin
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/superadminregister_body"
-        required: true
+              $ref: '#/components/schemas/SuperadminRegister'
       responses:
-        "200":
-          description: Registered
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/SuccessResponse"
+        "200": { description: Registered successfully }
+
   /auth-login:
     post:
-      tags:
-      - Auth
+      tags: [Auth]
       summary: Login (Admin or Superadmin)
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/LoginRequest"
-        required: true
+              $ref: '#/components/schemas/LoginRequest'
       responses:
-        "200":
-          description: Login Success
+        "200": { description: Login successful }
+
   /superadmin-api/organizations:
     get:
-      tags:
-      - Superadmin
-      summary: List Organizations / Get Details
-      parameters:
-      - name: ORG_ID
-        in: query
-        required: false
-        schema:
-          type: string
+      tags: [Superadmin]
+      summary: List Organizations
+      security: [{ BearerAuth: [] }]
       responses:
-        "200":
-          description: OK
-      security:
-      - BearerAuth: []
+        "200": { description: OK }
+
     post:
-      tags:
-      - Superadmin
+      tags: [Superadmin]
       summary: Create Organization
+      security: [{ BearerAuth: [] }]
       requestBody:
+        required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/OrganizationCreate"
-        required: true
+              $ref: '#/components/schemas/OrganizationCreate'
       responses:
-        "200":
-          description: Created
-      security:
-      - BearerAuth: []
+        "200": { description: Created }
+
   /admin-api/dashboard:
     get:
-      tags:
-      - Admin
-      summary: Dashboard Stats
+      tags: [Admin]
+      summary: Dashboard Statistics
+      security: [{ BearerAuth: [] }]
       responses:
-        "200":
-          description: OK
-      security:
-      - BearerAuth: []
+        "200": { description: OK }
+
   /admin-api/branches:
+    get:
+      tags: [Admin]
+      summary: List Branches
+      security: [{ BearerAuth: [] }]
+      responses:
+        "200": { description: OK }
+
     post:
-      tags:
-      - Admin
+      tags: [Admin]
       summary: Create Branch
+      security: [{ BearerAuth: [] }]
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/BranchCreate"
-        required: true
+              $ref: '#/components/schemas/BranchCreate'
       responses:
-        "200":
-          description: Created
-      security:
-      - BearerAuth: []
+        "200": { description: Created }
+
   /admin-api/queues:
     get:
-      tags:
-      - Admin
-      summary: List Queues
+      tags: [Admin]
+      summary: List Queues / Get Queue Details
+      description: Provide QUEUE_ID to fetch a single queue.
+      parameters:
+        - name: QUEUE_ID
+          in: query
+          required: false
+          schema:
+            type: string
+      security: [{ BearerAuth: [] }]
       responses:
-        "200":
-          description: OK
-      security:
-      - BearerAuth: []
+        "200": { description: OK }
+
     post:
-      tags:
-      - Admin
+      tags: [Admin]
       summary: Create Queue
+      security: [{ BearerAuth: [] }]
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/QueueCreate"
-        required: true
+              $ref: '#/components/schemas/QueueCreate'
       responses:
-        "200":
-          description: Created
-      security:
-      - BearerAuth: []
-  /admin-api/queues/{QUEUE_ID}:
-    get:
-      tags:
-      - Admin
-      summary: Get Queue Details
-      parameters:
-      - name: QUEUE_ID
-        in: path
-        required: true
-        schema:
-          type: string
-      responses:
-        "200":
-          description: OK
-      security:
-      - BearerAuth: []
+        "200": { description: Created }
+
   /admin-api/queues/{QUEUE_ID}/start:
     post:
-      tags:
-      - Admin
+      tags: [Admin]
       summary: Start Queue
       parameters:
-      - name: QUEUE_ID
-        in: path
-        required: true
-        schema:
-          type: string
+        - in: path
+          name: QUEUE_ID
+          required: true
+          schema: { type: string }
+      security: [{ BearerAuth: [] }]
       responses:
-        "200":
-          description: Started
-      security:
-      - BearerAuth: []
+        "200": { description: Started }
+
   /admin-api/queues/{QUEUE_ID}/pause:
     post:
-      tags:
-      - Admin
+      tags: [Admin]
       summary: Pause Queue
       parameters:
-      - name: QUEUE_ID
-        in: path
-        required: true
-        schema:
-          type: string
+        - in: path
+          name: QUEUE_ID
+          required: true
+          schema: { type: string }
+      security: [{ BearerAuth: [] }]
       responses:
-        "200":
-          description: Paused
-      security:
-      - BearerAuth: []
+        "200": { description: Paused }
+
+  /admin-api/queues/{QUEUE_ID}/reset:
+    post:
+      tags: [Admin]
+      summary: Reset Queue
+      parameters:
+        - in: path
+          name: QUEUE_ID
+          required: true
+          schema: { type: string }
+      security: [{ BearerAuth: [] }]
+      responses:
+        "200": { description: Reset successful }
+
+  /admin-api/queues/{QUEUE_ID}/close:
+    post:
+      tags: [Admin]
+      summary: Close Queue
+      parameters:
+        - in: path
+          name: QUEUE_ID
+          required: true
+          schema: { type: string }
+      security: [{ BearerAuth: [] }]
+      responses:
+        "200": { description: Closed }
+
   /admin-api/queues/{QUEUE_ID}/resume:
     post:
-      tags:
-      - Admin
+      tags: [Admin]
       summary: Resume Queue
       parameters:
-      - name: QUEUE_ID
-        in: path
-        required: true
-        schema:
-          type: string
+        - in: path
+          name: QUEUE_ID
+          required: true
+          schema: { type: string }
+      security: [{ BearerAuth: [] }]
       responses:
-        "200":
-          description: Resumed
-      security:
-      - BearerAuth: []
+        "200": { description: Resumed }
+
+  /admin-api/queues/{QUEUE_ID}/next:
+    post:
+      tags: [Admin]
+      summary: Move to Next Ticket
+      parameters:
+        - in: path
+          name: QUEUE_ID
+          required: true
+          schema: { type: string }
+      security: [{ BearerAuth: [] }]
+      responses:
+        "200": { description: Next ticket called }
+
+  /admin-api/queues/{TICKET_ID}/call:
+    post:
+      tags: [Admin]
+      summary: Call Specific Ticket
+      parameters:
+        - in: path
+          name: TICKET_ID
+          required: true
+          schema: { type: string }
+      security: [{ BearerAuth: [] }]
+      responses:
+        "200": { description: Ticket called }
+
   /admin-api/queues/{QUEUE_ID}/message:
     post:
-      tags:
-      - Admin
+      tags: [Admin]
       summary: Send Message to Ticket
       parameters:
-      - name: QUEUE_ID
-        in: path
-        required: true
-        schema:
-          type: string
+        - in: path
+          name: QUEUE_ID
+          required: true
+          schema: { type: string }
+      security: [{ BearerAuth: [] }]
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/MessageSend"
+              $ref: '#/components/schemas/MessageSend'
       responses:
-        "200":
-          description: Sent
-      security:
-      - BearerAuth: []
+        "200": { description: Message sent }
+
   /public-api/join:
     post:
-      tags:
-      - Public
+      tags: [Public]
       summary: Join Queue
       requestBody:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/JoinQueue"
-        required: true
+              $ref: '#/components/schemas/JoinQueue'
       responses:
-        "200":
-          description: Joined
+        "200": { description: Joined }
+
   /public-api/status/{ticket}:
     get:
-      tags:
-      - Public
-      summary: Check Ticket Status
+      tags: [Public]
+      summary: Ticket Status
       parameters:
-      - name: ticket
-        in: path
-        required: true
-        schema:
-          type: string
+        - in: path
+          name: ticket
+          required: true
+          schema: { type: string }
       responses:
-        "200":
-          description: OK
+        "200": { description: OK }
+
   /public-api/queue-info/{code}:
     get:
-      tags:
-      - Public
-      summary: Get Queue Info
+      tags: [Public]
+      summary: Queue Info
       parameters:
-      - name: code
-        in: path
-        required: true
-        schema:
-          type: string
+        - in: path
+          name: code
+          required: true
+          schema: { type: string }
       responses:
-        "200":
-          description: OK
+        "200": { description: OK }
+
   /public-api/leave/{ticket}:
     delete:
-      tags:
-      - Public
+      tags: [Public]
       summary: Leave Queue
       parameters:
-      - name: ticket
-        in: path
-        required: true
-        schema:
-          type: string
+        - in: path
+          name: ticket
+          required: true
+          schema: { type: string }
       responses:
-        "200":
-          description: Left
+        "200": { description: Left }
+
 components:
   schemas:
+    SuperadminRegister:
+      type: object
+      properties:
+        email: { type: string }
+        password: { type: string }
+        full_name: { type: string }
+
     LoginRequest:
       type: object
       properties:
-        email:
-          type: string
-        password:
-          type: string
-        type:
-          type: string
-          example: admin
+        email: { type: string }
+        password: { type: string }
+        type: { type: string }
+
     OrganizationCreate:
       type: object
       properties:
-        name:
-          type: string
-        slug:
-          type: string
-        email:
-          type: string
-        phone:
-          type: string
-        address:
-          type: string
-        admin_name:
-          type: string
+        name: { type: string }
+        slug: { type: string }
+        email: { type: string }
+        phone: { type: string }
+        address: { type: string }
+        admin_name: { type: string }
+
     BranchCreate:
       type: object
       properties:
-        name:
-          type: string
-        address:
-          type: string
-        phone:
-          type: string
+        name: { type: string }
+        address: { type: string }
+        phone: { type: string }
+
     QueueCreate:
       type: object
       properties:
-        branch_id:
-          type: string
-        name:
-          type: string
-        prefix:
-          type: string
-        max_capacity:
-          type: integer
+        branch_id: { type: string }
+        name: { type: string }
+        prefix: { type: string }
+        max_capacity: { type: integer }
+
     JoinQueue:
       type: object
       properties:
-        code:
-          type: string
+        code: { type: string }
+
     MessageSend:
       type: object
       properties:
-        ticket_id:
-          type: string
-        content:
-          type: string
-        type:
-          type: string
-    SuccessResponse:
-      type: object
-      properties:
-        success:
-          type: boolean
-          example: true
-    superadminregister_body:
-      properties:
-        email:
-          type: string
-        password:
-          type: string
-        full_name:
-          type: string
+        ticket_id: { type: string }
+        content: { type: string }
+        type: { type: string }
+
   securitySchemes:
     BearerAuth:
       type: http
