@@ -7,12 +7,53 @@ servers:
   - url: https://mtpeozrimqegooogvsgi.supabase.co/functions/v1
 
 tags:
+  - name: WebSocket | SSE
   - name: Auth
   - name: Superadmin
   - name: Admin
   - name: Public
 
 paths:
+
+  /realtime-stream:
+    get:
+      tags: [WebSocket | SSE]
+      summary: Realtime Stream (SSE)
+      description: |
+        Server Sent Events stream.
+
+        Call this after your successful login in admin panel and for mobile app call after successful queue join. This handle all the realtime case of every api endpoints
+
+      parameters:
+        - in: query
+          name: org_id
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Organization ID
+
+        - in: query
+          name: queue_id
+          required: false
+          schema:
+            type: string
+          description: Optional queue filter
+
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+          description: Optional JWT token
+
+      responses:
+        "200":
+          description: Connected 
+          content:
+            text/event-stream:
+              schema:
+                type: string  
 
   /superadmin-register:
     post:
